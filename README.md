@@ -2,6 +2,8 @@ Raspberry ip address: 192.168.1.47
 
 Node-red http://192.168.1.47:1880
 
+![App screenshoot](/Screenshot_20161130-143926.png?raw=true)
+
 ## HTTP API
 - PING 
   - Request `GET http://192.168.1.47:1880/ping`
