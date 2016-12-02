@@ -24,7 +24,7 @@ export default class Ago extends Component<void, Props, State> {
   }
 
   componentWillUnmount() {
-    clearinterval(this.intervalId);
+    clearInterval(this.intervalId);
   }
 
   state: State = {
