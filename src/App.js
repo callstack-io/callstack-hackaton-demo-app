@@ -4,8 +4,10 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
-  View
+  View,
+  DeviceEventEmitter,
 } from 'react-native';
+import Beacons from 'react-native-ibeacon';
 
 import Ago from './Ago';
 
@@ -42,6 +44,40 @@ export default class App extends Component<void, void, State> {
     ]).then(([light, sonic]: [LightStatus, SonicStatus]) => {
       this.setState({ light, sonic });
     }).then(this._connectedToWs);
+
+    const  region = {
+      identifier: 'Callstack',
+      uuid: 'f7826da6-4fa2-4e98-8024-bc5b71e0893e'
+    };
+
+
+    // Request for authorization while the app is open
+    Beacons.requestWhenInUseAuthorization();
+
+    Beacons.startMonitoringForRegion(region);
+    Beacons.startRangingBeaconsInRegion(region);
+
+    Beacons.startUpdatingLocation();
+
+    // Listen for beacon changes
+    const subscription = DeviceEventEmitter.addListener(
+    'beaconsDidRange',
+    (data) => {
+      console.log(data);
+      // data.region - The current region
+      // data.region.identifier
+      // data.region.uuid
+
+      // data.beacons - Array of all beacons inside a region
+      //  in the following structure:
+      //    .uuid
+      //    .major - The major version of a beacon
+      //    .minor - The minor version of a beacon
+      //    .rssi - Signal strength: RSSI value (between -100 and 0)
+      //    .proximity - Proximity value, can either be "unknown", "far", "near" or "immediate"
+      //    .accuracy - The accuracy of a beacon
+    }
+    );
   }
 
   componentWillUnmount() {
@@ -53,7 +89,7 @@ export default class App extends Component<void, void, State> {
   _connectedToWs = () => {
     this.setState({ connecting: true });
 
-    const ws = new WebSocket('ws://192.168.1.47:1880/ws/sensors'); 
+    const ws = new WebSocket('ws://192.168.1.47:1880/ws/sensors');
     ws.onopen = () => this.setState({ connecting: false, connected: true });
     ws.onmessage = (event) => this.setState((JSON.parse(event.data)));
     ws.onclose = () => this.setState({ connected: false });
