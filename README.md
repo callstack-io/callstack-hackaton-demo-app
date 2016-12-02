@@ -4,6 +4,16 @@ Node-red http://192.168.1.47:1880
 
 ![App screenshoot](/Screenshot_20161130-143926.png?raw=true)
 
+## BEACONS
+Region:
+`const region = {
+    identifier: 'Callstack',
+    uuid: 'f7826da6-4fa2-4e98-8024-bc5b71e0893e'
+};`
+
+Beacon IDs:
+`const majorIDs = [38488, 32301]`
+
 ## HTTP API
 - PING 
   - Request `GET http://192.168.1.47:1880/ping`
